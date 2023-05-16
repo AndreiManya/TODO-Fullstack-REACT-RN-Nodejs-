@@ -8,7 +8,9 @@ export interface TodoEdit {
     id: number,
     value: string,
     checked: boolean,
-    setChecked: Function
+    setChecked: Function,
+    openModal: Function,
+    removeTodo: Function,
 }
 
 export interface InputProps {
