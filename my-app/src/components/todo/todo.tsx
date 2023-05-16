@@ -7,7 +7,7 @@ import {
   } from '@ant-design/icons';
 
 
-const Todo: FC<TodoEdit> = ({id, value, checked, setChecked, openModal}) => {
+const Todo: FC<TodoEdit> = ({id, value, checked, setChecked, openModal, removeTodo}) => {
   const styled = {
     textDecorationLine: checked ? 'line-through' : 'none', 
   }
@@ -23,6 +23,7 @@ const Todo: FC<TodoEdit> = ({id, value, checked, setChecked, openModal}) => {
             <Button
                 danger 
                 icon={<DeleteOutlined />}
+                onClick={() => removeTodo(id)}
             />
         </Space>
     </List.Item>

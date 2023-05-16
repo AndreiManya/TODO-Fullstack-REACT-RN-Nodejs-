@@ -5,7 +5,7 @@ import { TodoProps, InputProps } from '../../interface/todo';
 
 const TodoList = () => {
   const { Title } = Typography;
-  const [list, setList] = useState<TodoProps[]>([{id: 1, value: 'First todo', checked: false}]);
+  const [list, setList] = useState<TodoProps[]>([]);
   const [value, setValue] = useState<InputProps>({text: '', isError: false});
   const [modal, setModal] = useState<boolean>(false);
 
@@ -24,7 +24,8 @@ const TodoList = () => {
   }
 
   const handleRemove = (id: number) => { 
-    setList((prev) => [...prev, { id, value: value.text, checked: false} as TodoProps]);
+    let copy = list.filter((e) => e.id !== id);
+    setList(copy);
   }
 
   return (
