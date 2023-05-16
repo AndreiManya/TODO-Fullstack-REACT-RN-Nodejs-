@@ -5,11 +5,20 @@
   margin: auto;
   text-align: center;
 }
+
 .flex { 
   display: flex;
   margin: auto;
 }
+
 .input {
   max-width: 200px;
   margin: 0 20px 20px 0;
+}
+
+.todo-text {
+  margin: 0 auto 0 10px;
+  max-width: 300px;
+  word-break: break-all;
+  white-space: normal !important;
 }

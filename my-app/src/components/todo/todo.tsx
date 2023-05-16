@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import {TodoEdit} from '../../interface/todo';
-import { Checkbox, Button, Space, List } from 'antd';
+import { Checkbox, Button, Space, List, Tag } from 'antd';
 import {
     EditOutlined,
     DeleteOutlined
@@ -13,12 +13,14 @@ const Todo: FC<TodoEdit> = ({id, value, checked, setChecked, openModal, removeTo
   }
   return (
     <List.Item>
-        <Checkbox checked={checked} onChange={() => setChecked(id)} style={styled}> 
-        {value}
-        </Checkbox>
+        <Checkbox checked={checked} onChange={() => setChecked(id)} style={styled}/> 
+        <Tag color={checked ? 'green' : 'red'} className="todo-text">
+            {value}
+        </Tag>
         <Space>
             <Button
                 icon={<EditOutlined />}
+                onClick={() => openModal(id)}
             />
             <Button
                 danger 
