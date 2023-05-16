@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import Todo from '../todo/todo';
 import { Typography, Input, Button, List } from 'antd';
 import { TodoProps, InputProps } from '../../interface/todo';
+import EditModal from '../modals/edit';
 
-const TodoList = () => {
+const TodoList: FC = () => {
   const { Title } = Typography;
   const [list, setList] = useState<TodoProps[]>([]);
   const [value, setValue] = useState<InputProps>({text: '', isError: false});
   const [modal, setModal] = useState<boolean>(false);
+  const [clicked, setClicked] = useState<TodoProps>({id: 2222, value: 'w', checked: false});
 
   const setChecked = (id: number) => { 
     setList(prev => prev.map((todo: TodoProps) => todo.id === id ? {...todo, checked: !todo.checked} : todo));
@@ -19,8 +21,13 @@ const TodoList = () => {
     }
     return setValue({...value, isError: true})
   }
-  const handleModal = (id: number) => { 
-    setModal((prev) => !prev);
+  const openModal = (id: number) => { 
+    let selected = list.filter((e) => e.id === id);
+    setClicked(selected[0]);
+    setModal(true);
+  }
+  const closeModal = () => { 
+    setModal(false);
   }
 
   const handleRemove = (id: number) => { 
@@ -58,10 +65,16 @@ const TodoList = () => {
             value={e.value} 
             checked={e.checked} 
             setChecked={(id: number) => setChecked(id)}
-            openModal={(id: number) => handleModal(id)}
+            openModal={(id: number) => openModal(id)}
             removeTodo={(id: number) => handleRemove(id)}
           />
         )}
+      />
+      <EditModal
+        {...clicked}
+        open={modal}
+        onOk={() => closeModal()}
+        onCancel={() => closeModal()}
       />
     </>
   );
