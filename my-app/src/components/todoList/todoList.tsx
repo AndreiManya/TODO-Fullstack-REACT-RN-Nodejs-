@@ -23,11 +23,18 @@ const TodoList: FC = () => {
     }
     return setValue({...value, isError: true})
   }
+  
+  const handleChange = () => { 
+      setList((prev) => prev.map((e) => e.id === clicked.id ? clicked : e));
+      closeModal();
+  }
+
   const openModal = (id: number) => { 
     let selected = list.filter((e) => e.id === id);
     setClicked(selected[0]);
     setModal(true);
   }
+
   const closeModal = () => { 
     setClicked(defaultData);
     setModal(false);
@@ -77,7 +84,7 @@ const TodoList: FC = () => {
         value={clicked.value}
         changeValue={(val: string) => {setClicked({...clicked, value: val})} }
         open={modal}
-        onOk={() => closeModal()}
+        onOk={() => handleChange()}
         onCancel={() => closeModal()}
       />
     </>

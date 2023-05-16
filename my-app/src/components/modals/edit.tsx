@@ -9,7 +9,7 @@ const EditModal: FC<ModalProps> = ({ value, changeValue, open, onOk, onCancel })
         title="Edit todo" 
         open={open}
         onCancel={() => onCancel()}
-        onOk={() => onOk()}
+        onOk={() => value && onOk()}
     >
         <Input 
             value={value}
