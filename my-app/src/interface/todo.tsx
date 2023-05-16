@@ -10,3 +10,8 @@ export interface TodoEdit {
     checked: boolean,
     setChecked: Function
 }
+
+export interface InputProps {
+    text: string,
+    isError: boolean, 
+}
