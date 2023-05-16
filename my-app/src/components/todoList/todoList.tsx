@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useMemo, useEffect } from 'react';
 import Todo from '../todo/todo';
 import { Typography, Input, Button, List } from 'antd';
 import { TodoProps, InputProps } from '../../interface/todo';
@@ -6,10 +6,12 @@ import EditModal from '../modals/edit';
 
 const TodoList: FC = () => {
   const { Title } = Typography;
+  const defaultData = useMemo(()=> ({id: 99999, value: '', checked: false}), [])
+
   const [list, setList] = useState<TodoProps[]>([]);
   const [value, setValue] = useState<InputProps>({text: '', isError: false});
   const [modal, setModal] = useState<boolean>(false);
-  const [clicked, setClicked] = useState<TodoProps>({id: 2222, value: 'w', checked: false});
+  const [clicked, setClicked] = useState<TodoProps>(defaultData);
 
   const setChecked = (id: number) => { 
     setList(prev => prev.map((todo: TodoProps) => todo.id === id ? {...todo, checked: !todo.checked} : todo));
@@ -27,6 +29,7 @@ const TodoList: FC = () => {
     setModal(true);
   }
   const closeModal = () => { 
+    setClicked(defaultData);
     setModal(false);
   }
 
@@ -71,7 +74,8 @@ const TodoList: FC = () => {
         )}
       />
       <EditModal
-        {...clicked}
+        value={clicked.value}
+        changeValue={(val: string) => {setClicked({...clicked, value: val})} }
         open={modal}
         onOk={() => closeModal()}
         onCancel={() => closeModal()}

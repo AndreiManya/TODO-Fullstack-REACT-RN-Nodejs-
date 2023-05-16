@@ -18,11 +18,11 @@ export interface InputProps {
 
 export type TodoEdit = TodoFunctions & TodoProps;
 
-export interface Modal {
+export interface ModalProps {
+    value?: string,
+    changeValue: Function,
     open: boolean,
     onOk: Function, 
     onCancel: Function
 }
-
-export type ModalProps = Modal & TodoProps;
 

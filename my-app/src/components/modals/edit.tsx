@@ -1,8 +1,8 @@
 import React, { FC }  from 'react';
-import { Button, Modal } from 'antd';
+import { Modal, Input } from 'antd';
 import { ModalProps } from '../../interface/todo';
 
-const EditModal: FC<ModalProps> = ({id, value, checked, open, onOk, onCancel }) => {
+const EditModal: FC<ModalProps> = ({ value, changeValue, open, onOk, onCancel }) => {
 
   return (
     <Modal 
@@ -11,7 +11,10 @@ const EditModal: FC<ModalProps> = ({id, value, checked, open, onOk, onCancel }) 
         onCancel={() => onCancel()}
         onOk={() => onOk()}
     >
-        <p>{value}</p>
+        <Input 
+            value={value}
+            onChange={(e) => changeValue(e.target.value)}
+        />
     </Modal>
   );
 }
