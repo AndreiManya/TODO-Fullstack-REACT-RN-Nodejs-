@@ -105,11 +105,16 @@ const TodoList: FC = () => {
 
   useEffect(() =>{
     async function fetchData() {
-      let resp = await fetch('http://localhost:8080/todo')
-      .then(res => res.json())
-      .then(comments => setList(comments as Array<TodoProps>));
-      console.log(resp)
-      setLoading(false);
+      try {
+        let resp = await fetch('http://localhost:8080/todo')
+        .then(res => res.json())
+        .then(comments => comments.length ? setList(comments as Array<TodoProps>) : []);
+        console.log(resp)
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
     }
     fetchData();
   }, [])
