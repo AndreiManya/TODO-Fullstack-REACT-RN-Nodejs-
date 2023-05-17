@@ -7,7 +7,8 @@ import {
   StatusBar,
   View,
   TextInput,
-  Button,
+  Pressable,
+
 } from 'react-native';
 import Spinner from '../spinner/spinner';
 import Item from '../item/item';
@@ -54,6 +55,19 @@ const TodoList = () => {
       console.log(error);
     }
   }
+
+  const handleRemove = async (id: string) => { 
+    try {
+        setLoading(true);
+        await fetch(`http://172.20.10.2:8080/todo/${id}`, { method: "DELETE" });
+        setList(prev => prev.filter((e) => e._id !== id));
+        setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  }
+
   useEffect(() =>{
     async function fetchData() {
       try {
@@ -86,14 +100,24 @@ const TodoList = () => {
                 placeholder={value.isError ? 'Field is required' : ""}
                 ref={inputRef}
               />
-              <Button
-                title="Add"
+              <Pressable 
+                style={styles.button} 
                 onPress={handleAddTask}
-              />
+              >
+                <Text style={styles.text}>Add</Text>
+              </Pressable>
             </View>
             <FlatList
               data={list}
-              renderItem={({item}) => <Item key={item._id} value={item.value} checked={item.checked} />}
+              renderItem={({item}) => 
+                  <Item 
+                    key={item._id}
+                    id={item._id}
+                    value={item.value} 
+                    checked={item.checked} 
+                    remove={(id: string) => handleRemove(id)}
+                  />
+              }
               keyExtractor={item => item._id}
             />
           </SafeAreaView>
@@ -124,10 +148,21 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    borderStyle: 'solid',
-    borderColor: 'red',
-    padding: 2
-  }
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'black',
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
 });
 
 export default TodoList;
