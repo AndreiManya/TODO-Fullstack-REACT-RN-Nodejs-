@@ -25,14 +25,16 @@ module.exports = {
       ],
 
       parserOptions: {
-        project: ['./ToDos/my-app/tsconfig.json']// Specify it only for TypeScript files
+        project: ['./tsconfig.json'] // Specify it only for TypeScript files
       }
     }
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
+    project: 'tsconfig.json',
+    tsconfigRootDir: __dirname,
     sourceType: 'module'
   },
+  ignorePatterns: [".eslintrc.js"],
   plugins: [
     'react'
   ],
@@ -41,4 +43,5 @@ module.exports = {
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/semi': ['error']
   }
+// eslint-disable-next-line @typescript-eslint/semi
 }
