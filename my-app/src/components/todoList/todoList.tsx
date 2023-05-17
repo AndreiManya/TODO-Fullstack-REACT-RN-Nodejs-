@@ -3,6 +3,7 @@ import Todo from '../todo/todo';
 import { Typography, Input, Button, List } from 'antd';
 import { TodoProps, InputProps } from '../../interface/todo';
 import EditModal from '../modals/edit';
+import Spinner from '../spinner/index';
 
 const TodoList: FC = () => {
   const { Title } = Typography;
@@ -13,20 +14,71 @@ const TodoList: FC = () => {
   const [modal, setModal] = useState<boolean>(false);
   const [clicked, setClicked] = useState<TodoProps>(defaultData);
 
-  const setChecked = (id: number) => { 
-    setList(prev => prev.map((todo: TodoProps) => todo.id === id ? {...todo, checked: !todo.checked} : todo));
-  }
-  const handlerAddTask = () => { 
-    if(value.text.length) { 
-      setList((prev) => [...prev, { id: prev.length + 1, value: value.text, checked: false} as TodoProps]);
-      return setValue({text: '', isError: false});
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const setChecked = async (id: number) => { 
+    try {
+        setLoading(true);
+        let item = list.filter((e) => e.id === id)[0];
+        await fetch(`http://localhost:8080/todo/${id}`, 
+        {
+          method: "PATCH",     
+          headers: {
+            "Content-Type": "application/json",
+          }, 
+          body: JSON.stringify({...item, 'checked': !item.checked})
+        });
+        setLoading(false);
+        setList(prev => prev.map((todo: TodoProps) => todo.id === id ? {...todo, checked: !todo.checked} : todo));
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
-    return setValue({...value, isError: true})
+  }
+
+  const handlerAddTask = async () => { 
+    try {
+      if(value.text.length) { 
+        setLoading(true);
+        let newTodo = { id: list.length + 1, value: value.text, checked: false};
+        console.log(JSON.stringify(newTodo))
+        await fetch('http://localhost:8080/todo', 
+        {
+          method: "POST",     
+          headers: {
+            "Content-Type": "application/json",
+          }, 
+          body: JSON.stringify(newTodo)
+        });
+        setList((prev) => [...prev, newTodo as TodoProps]);
+        setLoading(false);
+        return setValue({text: '', isError: false});
+      }
+      return setValue({...value, isError: true})
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   }
   
-  const handleChange = () => { 
+  const handleChange = async () => {
+    try {
+      setLoading(true);
+      await fetch(`http://localhost:8080/todo/${clicked.id}`, 
+      {
+        method: "PATCH",     
+        headers: {
+          "Content-Type": "application/json",
+        }, 
+        body: JSON.stringify(clicked)
+      });
+      setLoading(false);
       setList((prev) => prev.map((e) => e.id === clicked.id ? clicked : e));
       closeModal();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   }
 
   const openModal = (id: number) => { 
@@ -40,10 +92,28 @@ const TodoList: FC = () => {
     setModal(false);
   }
 
-  const handleRemove = (id: number) => { 
-    let copy = list.filter((e) => e.id !== id);
-    setList(copy);
+  const handleRemove = async (id: number) => { 
+    try {
+        setLoading(true);
+        await fetch(`http://localhost:8080/todo/${id}`, { method: "DELETE" });
+        setList(prev => prev.filter((e) => e.id !== id));
+        setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   }
+
+  useEffect(() =>{
+    async function fetchData() {
+      let resp = await fetch('http://localhost:8080/todo')
+      .then(res => res.json())
+      .then(comments => setList(comments as Array<TodoProps>));
+      console.log(resp)
+      setLoading(false);
+    }
+    fetchData();
+  }, [])
 
   return (
     <>
@@ -87,6 +157,10 @@ const TodoList: FC = () => {
         onOk={() => handleChange()}
         onCancel={() => closeModal()}
       />
+      {
+        loading &&
+        <Spinner/>
+      }
     </>
   );
 }
