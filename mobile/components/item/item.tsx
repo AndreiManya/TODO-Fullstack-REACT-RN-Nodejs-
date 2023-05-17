@@ -12,20 +12,26 @@ type ItemProps = {
   checked: boolean, 
   id: string,
   remove: Function,
-  check: Function
-
+  check: Function,
+  edit: Function
 };
-const Item = ({value, checked, id, remove, check}: ItemProps) => (
+const Item = ({value, checked, id, remove, check, edit}: ItemProps) => (
   <TouchableHighlight
     onPress={() => check(id)}
   >
       <View style={{...styles.item, backgroundColor: checked ? 'green' : 'red'}}>
         <Text style={styles.value}>{value}</Text>
         <Pressable 
-          style={styles.button} 
+          style={styles.edit} 
+          onPress={() => edit(id)}
+        >
+          <Text style={styles.textEdit}>Edit</Text>
+        </Pressable>
+        <Pressable 
+          style={styles.delete} 
           onPress={() => remove(id)}
         >
-          <Text style={styles.text}>Del</Text>
+          <Text style={styles.textDelete}>Del</Text>
         </Pressable>
       </View>
   </TouchableHighlight>
@@ -48,7 +54,24 @@ const styles = StyleSheet.create({
     flex: 1, 
     flexWrap: 'wrap'
   },
-  button: {
+  edit: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 45,
+    height: 30,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'yellow',
+    marginRight: 10
+  },
+  textEdit: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'black',
+  },
+  delete: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 45,
@@ -57,7 +80,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: 'gray',
   },
-  text: {
+  textDelete: {
     fontSize: 16,
     lineHeight: 21,
     fontWeight: 'bold',
