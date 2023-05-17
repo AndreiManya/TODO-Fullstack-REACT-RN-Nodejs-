@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -17,6 +17,22 @@ export interface TodoProps {
 const TodoList = () => {
   const [list, setList] = useState<TodoProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+
+  useEffect(() =>{
+    async function fetchData() {
+      try {
+        let resp = await fetch('http://172.20.10.2:8080/todo')
+        .then(res => res.json())
+        .then(comments => setList(comments as Array<TodoProps>));
+        console.log(resp)
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
