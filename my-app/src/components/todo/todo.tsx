@@ -1,35 +1,34 @@
-import React, { FC } from 'react';
-import {TodoEdit} from '../../interface/todo';
-import { Checkbox, Button, Space, List, Tag } from 'antd';
+import React, { type FC } from 'react'
+import { type TodoEdit } from '../../interface/todo'
+import { Checkbox, Button, Space, List, Tag } from 'antd'
 import {
-    EditOutlined,
-    DeleteOutlined
-  } from '@ant-design/icons';
+  EditOutlined,
+  DeleteOutlined
+} from '@ant-design/icons'
 
-
-const Todo: FC<TodoEdit> = ({_id, value, checked, setChecked, openModal, removeTodo}) => {
+const Todo: FC<TodoEdit> = ({ _id, value, checked, setChecked, openModal, removeTodo }) => {
   const styled = {
-    textDecorationLine: checked ? 'line-through' : 'none', 
+    textDecorationLine: checked ? 'line-through' : 'none'
   }
   return (
     <List.Item>
-        <Checkbox checked={checked} onChange={() => setChecked(_id)} style={styled}/> 
+        <Checkbox checked={checked} onChange={() => { setChecked(_id) }} style={styled}/>
         <Tag color={checked ? 'green' : 'red'} className="todo-text">
             {value}
         </Tag>
         <Space>
             <Button
                 icon={<EditOutlined />}
-                onClick={() => openModal(_id)}
+                onClick={() => { openModal(_id) }}
             />
             <Button
-                danger 
+                danger
                 icon={<DeleteOutlined />}
-                onClick={() => removeTodo(_id)}
+                onClick={() => { removeTodo(_id) }}
             />
         </Space>
     </List.Item>
-  );
+  )
 }
 
-export default Todo;
+export default Todo
