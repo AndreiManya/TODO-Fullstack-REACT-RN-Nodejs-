@@ -7,25 +7,25 @@ import {
   } from '@ant-design/icons';
 
 
-const Todo: FC<TodoEdit> = ({id, value, checked, setChecked, openModal, removeTodo}) => {
+const Todo: FC<TodoEdit> = ({_id, value, checked, setChecked, openModal, removeTodo}) => {
   const styled = {
     textDecorationLine: checked ? 'line-through' : 'none', 
   }
   return (
     <List.Item>
-        <Checkbox checked={checked} onChange={() => setChecked(id)} style={styled}/> 
+        <Checkbox checked={checked} onChange={() => setChecked(_id)} style={styled}/> 
         <Tag color={checked ? 'green' : 'red'} className="todo-text">
             {value}
         </Tag>
         <Space>
             <Button
                 icon={<EditOutlined />}
-                onClick={() => openModal(id)}
+                onClick={() => openModal(_id)}
             />
             <Button
                 danger 
                 icon={<DeleteOutlined />}
-                onClick={() => removeTodo(id)}
+                onClick={() => removeTodo(_id)}
             />
         </Space>
     </List.Item>

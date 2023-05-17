@@ -7,7 +7,7 @@ import Spinner from '../spinner/index';
 
 const TodoList: FC = () => {
   const { Title } = Typography;
-  const defaultData = useMemo(()=> ({id: 99999, value: '', checked: false}), [])
+  const defaultData = useMemo(()=> ({_id: 'awd2weqdw', value: '', checked: false}), [])
 
   const [list, setList] = useState<TodoProps[]>([]);
   const [value, setValue] = useState<InputProps>({text: '', isError: false});
@@ -16,10 +16,10 @@ const TodoList: FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const setChecked = async (id: number) => { 
+  const setChecked = async (id: string) => { 
     try {
         setLoading(true);
-        let item = list.filter((e) => e.id === id)[0];
+        let item = list.filter((e) => e._id === id)[0];
         await fetch(`http://localhost:8080/todo/${id}`, 
         {
           method: "PATCH",     
@@ -29,7 +29,7 @@ const TodoList: FC = () => {
           body: JSON.stringify({...item, 'checked': !item.checked})
         });
         setLoading(false);
-        setList(prev => prev.map((todo: TodoProps) => todo.id === id ? {...todo, checked: !todo.checked} : todo));
+        setList(prev => prev.map((todo: TodoProps) => todo._id === id ? {...todo, checked: !todo.checked} : todo));
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -40,17 +40,16 @@ const TodoList: FC = () => {
     try {
       if(value.text.length) { 
         setLoading(true);
-        let newTodo = { id: list.length + 1, value: value.text, checked: false};
-        console.log(JSON.stringify(newTodo))
         await fetch('http://localhost:8080/todo', 
         {
           method: "POST",     
           headers: {
             "Content-Type": "application/json",
           }, 
-          body: JSON.stringify(newTodo)
+          body: JSON.stringify({value: value.text, checked: false})
+        }).then((e) => e.json()).then((e) => {
+          setList((prev) => [...prev, e as TodoProps]);
         });
-        setList((prev) => [...prev, newTodo as TodoProps]);
         setLoading(false);
         return setValue({text: '', isError: false});
       }
@@ -64,7 +63,7 @@ const TodoList: FC = () => {
   const handleChange = async () => {
     try {
       setLoading(true);
-      await fetch(`http://localhost:8080/todo/${clicked.id}`, 
+      await fetch(`http://localhost:8080/todo/${clicked._id}`, 
       {
         method: "PATCH",     
         headers: {
@@ -73,7 +72,7 @@ const TodoList: FC = () => {
         body: JSON.stringify(clicked)
       });
       setLoading(false);
-      setList((prev) => prev.map((e) => e.id === clicked.id ? clicked : e));
+      setList((prev) => prev.map((e) => e._id === clicked._id ? clicked : e));
       closeModal();
     } catch (error) {
       setLoading(false);
@@ -81,8 +80,8 @@ const TodoList: FC = () => {
     }
   }
 
-  const openModal = (id: number) => { 
-    let selected = list.filter((e) => e.id === id);
+  const openModal = (id: string) => { 
+    let selected = list.filter((e) => e._id === id);
     setClicked(selected[0]);
     setModal(true);
   }
@@ -92,11 +91,11 @@ const TodoList: FC = () => {
     setModal(false);
   }
 
-  const handleRemove = async (id: number) => { 
+  const handleRemove = async (id: string) => { 
     try {
         setLoading(true);
         await fetch(`http://localhost:8080/todo/${id}`, { method: "DELETE" });
-        setList(prev => prev.filter((e) => e.id !== id));
+        setList(prev => prev.filter((e) => e._id !== id));
         setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -140,13 +139,13 @@ const TodoList: FC = () => {
         renderItem={(e) =>             
         (
           <Todo 
-            key={e.id} 
-            id={e.id} 
+            key={e._id} 
+            _id={e._id} 
             value={e.value} 
             checked={e.checked} 
-            setChecked={(id: number) => setChecked(id)}
-            openModal={(id: number) => openModal(id)}
-            removeTodo={(id: number) => handleRemove(id)}
+            setChecked={(id: string) => setChecked(id)}
+            openModal={(id: string) => openModal(id)}
+            removeTodo={(id: string) => handleRemove(id)}
           />
         )}
       />
