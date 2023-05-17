@@ -1,6 +1,7 @@
 import express  from "express";
 import mongoose  from "mongoose";
 import ItemModel from './models/item.js';
+import cors from 'cors';
 
 mongoose
     .connect('mongodb+srv://admin:admin@cluster0.hb94eym.mongodb.net/todo?retryWrites=true&w=majority')
@@ -10,6 +11,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/todo', async (req, res) => { 
     try {
