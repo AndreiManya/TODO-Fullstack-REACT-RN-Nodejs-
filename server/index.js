@@ -1,5 +1,5 @@
 import express  from "express";
-import mongoose  from "mongoose";
+import mongoose, { mongo }  from "mongoose";
 import ItemModel from './models/item.js';
 import cors from 'cors';
 
@@ -26,20 +26,14 @@ app.get('/todo', async (req, res) => {
 })
 
 app.post('/todo', async (req, res) => { 
-    try {
         const doc = new ItemModel({
-            id: req.body.id,
+            _id: new mongo.ObjectId(),
             value: req.body.value,
             checked: req.body.checked
         });
 
         const item = await doc.save();
         res.json(item);
-    } catch (error) {
-        res.status(500).json({
-            message: "Не удалось создать задачу"
-        });
-    }
 })
 
 app.delete('/todo/:id', async (req, res) => { 
@@ -48,7 +42,7 @@ app.delete('/todo/:id', async (req, res) => {
 
         await ItemModel.findOneAndDelete(
         {
-            id: todoId,
+            _id: todoId,
         })
 
         res.json({
@@ -67,7 +61,7 @@ app.patch('/todo/:id', async (req, res) => {
 
         await ItemModel.updateOne(
         {
-            id: todoId,
+            _id: todoId,
         }, {
             id: req.body.id,
             value: req.body.value,
