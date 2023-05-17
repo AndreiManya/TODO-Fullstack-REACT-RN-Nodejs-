@@ -51,6 +51,7 @@ const TodoList: FC = () => {
         })
         setLoading(false)
         setValue({ text: '', isError: false })
+        return
       }
       setValue({ ...value, isError: true })
     } catch (error) {
@@ -129,7 +130,7 @@ const TodoList: FC = () => {
           onChange={(e) => { setValue({ isError: false, text: e.target.value }) }}
         />
         <Button
-          onClick={() => handlerAddTask }
+          onClick={() => { void handlerAddTask() }}
         >
           Add
         </Button>
