@@ -1,22 +1,21 @@
-import React, { FC }  from 'react';
-import { Modal, Input } from 'antd';
-import { ModalProps } from '../../interface/todo';
+import React, { type FC } from 'react'
+import { Modal, Input } from 'antd'
+import { type ModalProps } from '../../interface/todo'
 
 const EditModal: FC<ModalProps> = ({ value, changeValue, open, onOk, onCancel }) => {
-
   return (
-    <Modal 
-        title="Edit todo" 
+    <Modal
+        title="Edit todo"
         open={open}
-        onCancel={() => onCancel()}
-        onOk={() => value && onOk()}
+        onCancel={() => { onCancel() }}
+        onOk={() => { value ?? onOk() }}
     >
-        <Input 
+        <Input
             value={value}
-            onChange={(e) => changeValue(e.target.value)}
+            onChange={(e) => { changeValue(e.target.value) }}
         />
     </Modal>
-  );
+  )
 }
 
-export default EditModal;
+export default EditModal
