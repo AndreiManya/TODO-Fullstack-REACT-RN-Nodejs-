@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
   item: {
     padding: 20,
     marginVertical: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   value: {
-    fontSize: 32,
+    fontSize: 20,
   },
 });
 
