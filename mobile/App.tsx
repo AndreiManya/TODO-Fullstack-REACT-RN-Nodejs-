@@ -1,23 +1,12 @@
-import { FC } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import TodoList from './components/List/TodoList';
 
- const App: FC = () => {
+const App = () => {
+
   return (
-    <View style={styles.container}>
-      <Text>AWDWa</Text>
-      <StatusBar style="auto" />
-    </View>
+    <TodoList/>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
