@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   SafeAreaView,
   FlatList,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Spinner from '../spinner/spinner';
 import Item from '../item/item';
+import EditModal from '../modals/modal';
 
 export interface TodoProps {
   _id: string,
@@ -26,10 +27,24 @@ export interface InputProps {
 
 const TodoList = () => {
   const inputRef = useRef<HTMLInputElement | null>();
+  const defaultData = useMemo(()=> ({_id: 'awd2weqdw', value: '', checked: false}), [])
 
   const [list, setList] = useState<TodoProps[]>([]);
   const [value, setValue] = useState<InputProps>({text: '', isError: false});
   const [loading, setLoading] = useState<boolean>(true);
+  const [clicked, setClicked] = useState<TodoProps>(defaultData);
+  const [modal, setModal] = useState<boolean>(false);
+
+  const openModal = (id: string) => { 
+    let selected = list.filter((e) => e._id === id);
+    setClicked(selected[0]);
+    setModal(true);
+  }
+
+  const closeModal = () => { 
+    setClicked(defaultData);
+    setModal(false);
+  }
 
   const handleAddTask = async () => { 
     try {
@@ -88,6 +103,26 @@ const TodoList = () => {
     }
   }
 
+  const handleChange = async () => {
+    try {
+      setLoading(true);
+      await fetch(`http://172.20.10.2:8080/todo/${clicked._id}`, 
+      {
+        method: "PATCH",     
+        headers: {
+          "Content-Type": "application/json",
+        }, 
+        body: JSON.stringify(clicked)
+      });
+      setLoading(false);
+      setList((prev) => prev.map((e) => e._id === clicked._id ? clicked : e));
+      closeModal();
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  }
+
   useEffect(() =>{
     async function fetchData() {
       try {
@@ -137,9 +172,17 @@ const TodoList = () => {
                     checked={item.checked} 
                     remove={(id: string) => handleRemove(id)}
                     check={(id: string) => handleTouch(id)}
+                    edit={(id: string) => openModal(id)}
                   />
               }
               keyExtractor={item => item._id}
+            />
+            <EditModal
+              value={clicked.value}
+              changeValue={(val: string) => {setClicked({...clicked, value: val})} }
+              open={modal}
+              onOk={() => handleChange()}
+              onCancel={() => closeModal()}
             />
           </SafeAreaView>
         }
