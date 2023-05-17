@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   Pressable,
-  GestureResponderEvent,
+  TouchableHighlight
 } from 'react-native';
 
 type ItemProps = {
@@ -12,18 +12,23 @@ type ItemProps = {
   checked: boolean, 
   id: string,
   remove: Function,
+  check: Function
 
 };
-const Item = ({value, checked, id, remove}: ItemProps) => (
-  <View style={{...styles.item, backgroundColor: checked ? 'green' : 'red'}}>
-    <Text style={styles.value}>{value}</Text>
-    <Pressable 
-      style={styles.button} 
-      onPress={() => remove(id)}
-    >
-      <Text style={styles.text}>Del</Text>
-    </Pressable>
-  </View>
+const Item = ({value, checked, id, remove, check}: ItemProps) => (
+  <TouchableHighlight
+    onPress={() => check(id)}
+  >
+      <View style={{...styles.item, backgroundColor: checked ? 'green' : 'red'}}>
+        <Text style={styles.value}>{value}</Text>
+        <Pressable 
+          style={styles.button} 
+          onPress={() => remove(id)}
+        >
+          <Text style={styles.text}>Del</Text>
+        </Pressable>
+      </View>
+  </TouchableHighlight>
 );
 
 const styles = StyleSheet.create({

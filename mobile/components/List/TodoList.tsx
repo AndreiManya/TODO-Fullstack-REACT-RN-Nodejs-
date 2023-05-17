@@ -68,6 +68,26 @@ const TodoList = () => {
     }
   }
 
+  const handleTouch = async (id: string) => { 
+    try {
+        setLoading(true);
+        let item = list.filter((e) => e._id === id)[0];
+        await fetch(`http://172.20.10.2:8080/todo/${id}`, 
+        {
+          method: "PATCH",     
+          headers: {
+            "Content-Type": "application/json",
+          }, 
+          body: JSON.stringify({...item, 'checked': !item.checked})
+        });
+        setLoading(false);
+        setList(prev => prev.map((todo: TodoProps) => todo._id === id ? {...todo, checked: !todo.checked} : todo));
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  }
+
   useEffect(() =>{
     async function fetchData() {
       try {
@@ -116,6 +136,7 @@ const TodoList = () => {
                     value={item.value} 
                     checked={item.checked} 
                     remove={(id: string) => handleRemove(id)}
+                    check={(id: string) => handleTouch(id)}
                   />
               }
               keyExtractor={item => item._id}
